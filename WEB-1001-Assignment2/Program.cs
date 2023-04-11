@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using WEB_1001_Assignment2.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ToDoContext>(
+    options => options.UseSqlite("Data Source=ToDo.db;")
+    );
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
