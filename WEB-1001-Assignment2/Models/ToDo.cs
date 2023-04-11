@@ -2,8 +2,8 @@
 
 namespace WEB_1001_Assignment2.Models
 {
-    public class ToDo
-    {
+    public class ToDo { 
+
         [Key]
         public int Id { get; set; }
         [Required]

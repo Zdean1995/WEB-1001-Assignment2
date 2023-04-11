@@ -17,18 +17,22 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.TodoText)
         </dd>
+        @if (Model.Completed)
+        {
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Completed)
+            Completion Date
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Completed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompletetionDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompletetionDate)
-        </dd>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CompletetionDate)
+            </dd>
+        }
+        else
+        {
+            <dt class="col-sm-2">
+                Not Completed
+            </dt>
+            <dd class="col-sm-10"></dd>
+        }
     </dl>
     
     <form asp-action="Delete">

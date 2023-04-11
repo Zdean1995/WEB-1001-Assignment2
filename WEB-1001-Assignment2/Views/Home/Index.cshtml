@@ -1,8 +1,50 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WEB_1001_Assignment2.Models.ToDo>
+
+@{
+    ViewData["Title"] = "To Do";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Add</a>
+</p>
+<table class="table">
+    <tbody>
+@foreach (var item in Model) {
+            if (item.Completed)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TodoText)
+                    </td>
+                    <td>
+                        Completed @Html.DisplayFor(modelItem => item.CompletetionDate)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TodoText)
+                    </td>
+                    <td>
+                        <div class="col-md-4">
+                           Not Completed
+                        </div>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

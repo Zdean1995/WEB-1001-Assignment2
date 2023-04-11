@@ -1,0 +1,47 @@
+﻿@model WEB_1001_Assignment2.Models.ToDo
+
+@{
+    ViewData["Title"] = "Add To Do";
+}
+<style>
+    .form-inline {  
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+    }
+
+    .form-inline label {
+      margin: 5px 10px 5px 0;
+    }
+
+    .form-inline input {
+      vertical-align: middle;
+      margin: 5px 10px 5px 0;
+      padding: 10px;
+}
+</style>
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" class="form-inline">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label asp-for="TodoText" class="control-label">To Do</label>
+            <div class="form-group">
+                <input asp-for="TodoText" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+            <span asp-validation-for="TodoText" class="text-danger"></span>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to To Dos</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,32 +1,167 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using WEB_1001_Assignment2.Data;
 using WEB_1001_Assignment2.Models;
 
 namespace WEB_1001_Assignment2.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ToDoContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ToDoContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // GET: ToDoes
+        public async Task<IActionResult> Index()
+        {
+              return _context.ToDos != null ? 
+                          View(await _context.ToDos.ToListAsync()) :
+                          Problem("Entity set 'ToDoContext.ToDos'  is null.");
+        }
+
+        // GET: ToDoes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.ToDos == null)
+            {
+                return NotFound();
+            }
+
+            var toDo = await _context.ToDos
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (toDo == null)
+            {
+                return NotFound();
+            }
+
+            return View(toDo);
+        }
+
+        // GET: ToDoes/Create
+        public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        // POST: ToDoes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,TodoText,Completed,CompletetionDate")] ToDo toDo)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                _context.Add(toDo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(toDo);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // GET: ToDoes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (id == null || _context.ToDos == null)
+            {
+                return NotFound();
+            }
+
+            var toDo = await _context.ToDos.FindAsync(id);
+            if (toDo == null)
+            {
+                return NotFound();
+            }
+            return View(toDo);
+        }
+
+        // POST: ToDoes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TodoText,Completed,CompletetionDate")] ToDo toDo)
+        {
+            if (id != toDo.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (toDo.Completed)
+                    {
+                        toDo.CompletetionDate = DateTime.Now;
+                    }
+                    _context.Update(toDo);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ToDoExists(toDo.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(toDo);
+        }
+
+        // GET: ToDoes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.ToDos == null)
+            {
+                return NotFound();
+            }
+
+            var toDo = await _context.ToDos
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (toDo == null)
+            {
+                return NotFound();
+            }
+
+            return View(toDo);
+        }
+
+        // POST: ToDoes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.ToDos == null)
+            {
+                return Problem("Entity set 'ToDoContext.ToDos'  is null.");
+            }
+            var toDo = await _context.ToDos.FindAsync(id);
+            if (toDo != null)
+            {
+                _context.ToDos.Remove(toDo);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ToDoExists(int id)
+        {
+          return (_context.ToDos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
