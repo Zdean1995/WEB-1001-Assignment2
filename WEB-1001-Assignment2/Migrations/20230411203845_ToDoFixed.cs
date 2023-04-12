@@ -8,6 +8,7 @@ namespace WEB_1001_Assignment2.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            //turns out you cant have a property with the same name as the class for enitity framework.
             migrationBuilder.RenameColumn(
                 name: "Todo",
                 table: "ToDos",

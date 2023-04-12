@@ -10,6 +10,7 @@ using WEB_1001_Assignment2.Models;
 
 namespace WEB_1001_Assignment2.Controllers
 {
+    //This is the scaffolded controller but renamed to HomeController.  This is either genius or very stupid.
     public class HomeController : Controller
     {
         private readonly ToDoContext _context;
@@ -99,6 +100,7 @@ namespace WEB_1001_Assignment2.Controllers
             {
                 try
                 {
+                    //The code to check if the todo is being marked as complete and if it is setting the completion date to now.
                     if (toDo.Completed)
                     {
                         toDo.CompletetionDate = DateTime.Now;
